@@ -296,22 +296,22 @@ def ir(pagina):
 # ------------------------------------------------------------------ carga de archivos
 @st.cache_data
 def cargar_info():
-    return json.load(open(BASE / "datos" / "info_variables.json", encoding="utf-8"))
+    return json.load(open(BASE / "info_variables.json", encoding="utf-8"))
 
 
 @st.cache_data
 def cargar_muestra():
-    return pd.read_csv(BASE / "datos" / "muestra_pedidos_test.csv")
+    return pd.read_csv(BASE / "muestra_pedidos_test.csv")
 
 
 @st.cache_data
 def cargar_metricas_locales():
-    return pd.read_csv(BASE / "datos" / "metricas_test_modelos.csv")
+    return pd.read_csv(BASE / "metricas_test_modelos.csv")
 
 
 @st.cache_resource
 def cargar_modelo(nombre):
-    return joblib.load(BASE / "modelo" / f"{nombre}.joblib")
+    return joblib.load(BASE / f"{nombre}.joblib")
 
 
 info = cargar_info()
@@ -967,7 +967,7 @@ else:
     with st.container(key="card_c0"):
         k1, k2, k3 = st.columns([1.2, 1.2, 1], gap="large")
         with k1:
-            clave = st.selectbox("Modelo", list(NOMBRES), format_func=lambda k: NOMBRES[k], index=0, key="p_modelo")
+            clave = st.selectbox("Modelo", [k for k in NOMBRES if (BASE / f"{k}.joblib").exists()], format_func=lambda k: NOMBRES[k], index=0, key="p_modelo")
         with k2:
             nivel = st.select_slider("Sensibilidad de la alerta", options=list(NIVELES), value="Normal", key="p_nivel")
         umbral = NIVELES[nivel]
